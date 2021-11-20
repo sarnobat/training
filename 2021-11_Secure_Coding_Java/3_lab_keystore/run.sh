@@ -1,15 +1,17 @@
 # I used "mypasssword" as the password
 
 # TODO: change alias?
-KEY_ALIAS=wile_e_coyote
+# KEY_ALIAS=wile_e_coyote
 
 # /System/Library/Frameworks/JavaVM.framework/Versions/A/Commands/keytool
-keytool -genkey -alias $KEY_ALIAS -keystore acme.store -keyalg RSA
+keytool -genkey -alias wile_e_coyote -keystore acme.store -keyalg RSA
 
 # this generates a file called acme.store and a signed jar file
-jarsigner -keystore acme.store -signedjar ./signed_myapp.jar /myjar.jar $KEY_ALIAS
+jarsigner -keystore acme.store -signedjar ./signed_myapp.jar commons-lang3-3.1.jar $KEY_ALIAS
 
-keytool -export -keystore acme.store -alias $KEY_ALIAS -file ACME.cer
+keytool -export -keystore acme.store -alias wile_e_coyote -file ACME.cer
+
+keytool -import -alias wile_e_coyote -file ACME.cer -keystore roadrunner.store
 
 exit
 ###
