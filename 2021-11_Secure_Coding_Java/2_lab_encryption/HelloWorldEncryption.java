@@ -16,6 +16,10 @@ public class HelloWorldEncryption {
 			Key key = keyGen.generateKey();
 			byte[] encrypted = encrypt(msgText, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
 
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			byte[] input = msg.getBytes();
+			byte[] encrypted = Cipher.getInstance("AES/ECB/PKCS5Padding").doFinal(input); 
+			
 			System.out.println("encrypted text: " + new String(encrypted));
 		
 			byte[] decrypted = decrypt(encrypted, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
@@ -29,9 +33,6 @@ public class HelloWorldEncryption {
 
 	private static byte[] encrypt(String msg, Key key, Cipher cipher) throws Exception { 
 
-		cipher.init(Cipher.ENCRYPT_MODE, key);
-		byte[] input = msg.getBytes();
-		return cipher.doFinal(input); 
 	}
 	
 	
