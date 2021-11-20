@@ -7,7 +7,7 @@ KEY_ALIAS=wile_e_coyote
 keytool -genkey -alias $KEY_ALIAS -keystore acme.store -keyalg RSA
 
 # this generates a file called acme.store and a signed jar file
-jarsigner -keystore acme.store -signedjar ./signed_core-prime-8.62.0-SNAPSHOT.jar /Volumes/Numerous/work/src/iot_controlcenter.git/module/CorePrime/build/libs/core-prime-8.62.0-SNAPSHOT.jar $KEY_ALIAS
+jarsigner -keystore acme.store -signedjar ./signed_myapp.jar /myjar.jar $KEY_ALIAS
 
 keytool -export -keystore acme.store -alias $KEY_ALIAS -file ACME.cer
 
