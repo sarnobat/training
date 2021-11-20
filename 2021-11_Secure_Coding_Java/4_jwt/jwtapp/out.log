@@ -1,0 +1,34 @@
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective settings
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id google-api-services @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id apache-releases @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id apache-snapshots @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id central2 @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id google-api-services @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id apache-releases @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id apache-snapshots @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 'profiles.profile[onsite].repositories.repository.id' must be unique but found duplicate repository with id xerces-releases @ /Users/sarnobat/.m2/settings.xml
+[WARNING] 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.example:jwtapp >-------------------------
+[INFO] Building jwtapp 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ jwtapp ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /Volumes/git/github/training/2021-11_Secure_Coding_Java/4_jwt/jwtapp/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ jwtapp ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] Compiling 1 source file to /Volumes/git/github/training/2021-11_Secure_Coding_Java/4_jwt/jwtapp/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:3.0.0:java (default-cli) @ jwtapp ---
+SRIDHAR: your JWT token is: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2UifQ.a6wfQ6SYgvcPd8QWllst8xaf23-vPMorEFQ78KG-pgo
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.157 s
+[INFO] Finished at: 2021-11-19T19:39:20-08:00
+[INFO] ------------------------------------------------------------------------
