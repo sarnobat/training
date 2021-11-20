@@ -11,34 +11,28 @@ public class HelloWorldEncryption {
 		String msgText = "This is a message created by Komal";
 		
 		symmetric: {
+		
 			KeyGenerator keyGen = KeyGenerator.getInstance("AES"); 
 			keyGen.init(new SecureRandom());
 			Key key = keyGen.generateKey();
+			byte[] encrypted;
+			{
+				Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+				cipher.init(Cipher.ENCRYPT_MODE, key);
+				byte[] input = msgText.getBytes();
+				encrypted = cipher.doFinal(input); 
+				System.out.println("encrypted text: " + new String(encrypted));
+			}
 
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, key);
-			byte[] input = msgText.getBytes();
-			byte[] encrypted = cipher.doFinal(input); 
-			
-			System.out.println("encrypted text: " + new String(encrypted));
-		
-			byte[] decrypted = decrypt(encrypted, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
-		
-			System.out.println("decrypted text: " + new String(decrypted));
+			{
+				Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+				cipher.init(Cipher.DECRYPT_MODE, key);
+				byte[] decrypted =  cipher.doFinal(encrypted); 		
+				System.out.println("decrypted text: " + new String(decrypted));
+			}
 		}
 		
 		asymmetric: {
 		}
-	}
-
-	// private static byte[] encrypt(String msg, Key key, Cipher cipher) throws Exception { 
-// 
-// 	}
-// 	
-	
-	static byte[] decrypt(byte[] cipherText, Key key, Cipher cipher) throws Exception {
-
-		cipher.init(Cipher.DECRYPT_MODE, key);
-		return cipher.doFinal(cipherText); 
 	}
 }
