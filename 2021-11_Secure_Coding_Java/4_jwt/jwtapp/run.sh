@@ -1,1 +1,1 @@
-/usr/local/Cellar/openjdk@11/11.0.12/bin/java -cp "*" ./JwtCreate.java
+mvn compile exec:java -Dexec.mainClass=com.example.App | tee out.log
