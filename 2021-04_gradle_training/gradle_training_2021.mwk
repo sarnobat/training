@@ -1,0 +1,983 @@
+(Notes by Sridhar from Gradle Udemy classes taken on 2021-04)
+
+### Files
+### Object Fields
+### Plugins
+### Syntax
+### Plugins
+## Master class
+### File to Object transformation
+### Syntax
+### "gradle properties" output
+### "gradle model" - output
+
+Gradle code is not an executable program, it's a project object (a bit like CSS for a document object). It gets executed via callbacks/hooks (which, like CSS, is hard to understand the execution order of)
+
+### Files
+try this: Put print statements at the top of every .gradle file to see the order in which the scripts are getting invoked
+
+settings.gradle creates a settings object
+for root project
+settings.gradle (Settings object) is only useful for multi-project builds
+The javadoc for interface Settings.html gives more info
+init.gradle is transformed into an object of type “Gradle”
+build.gradle creates a project object
+(I think gradle is full of blind references to these and it's not clear what references what)
+
+*.gradle files get run in alphabetical order at the beginning (except build.gradle which happens in a later phase)
+
+If you look in settings.gradle, you'll see that build3Modules.properties is only needed for idea
+
+### Object Fields
+“project" - Variable you have access to
+“project.ext”
+“allProjects” - including top level module
+
+“subProjects” - only modules below
+
+“include” - to add subproject (this does all the magic)
+Script contains Projects contains Tasks contains Actions
+
+“tasks“
+getTasks()
+In build.gradle, you can call methods from the Project object (as well as the Script object)
+
+Script object:
+
+logger
+apply()
+
+
+
+
+Qualified symbol in build.gradle
+
+project.gradle.timestamp()
+project.getGradle().timestamp()
+project.getGradle().getGradleVersion()
+project.gradle.gradleVersion
+
+
+properties like these can also be set on the command line using -Pfoo=bar (not to be confused with -Dfoo=bar)
+
+They can also be put in a declarative gradle.properties file
+
+
+
+In other words, java properties have become first class citizens
+
+
+
+Use if (hasProperty) condition whenever you try to get a property value
+
+You can access other projects' objects by:
+
+project(':web') {
+    dependencies {
+        implementation project(":data")
+    }
+}
+
+
+### Plugins
+You just need too add the plugin line like with eclipse and it will give you all the extra tasks and variables
+
+gretty - a jetty plugin
+gradle tomcatRun
+
+### Syntax
+Colon indicates a relative path. For top level, it's redundant
+
+### Plugins
+Equivalent:
+
+plugins {
+    id: 'java'
+}
+apply plugin.:  'java'
+
+
+
+
+
+
+To use sonarqube with  gradle you just need the 1-line plugin reference, then execute 'gradle sonarqube'
+
+
+
+Jenkins jobs point to a root build script in your source tree. (Just like a shell script would)
+
+
+
+Printing the task graph would be useful. You'll need to add a plugin
+
+## Master class
+
+### File to Object transformation
+[Build.gradle] => (gradle binary) => [Script object]
+(Different object for each build.gradle)
+
+
+
+### Syntax
+Triple quote - “”” - open multi line string (and you can put interpolated string values in them just like “${project.someValue}”)
+
+
+
+Grade does a depth first search
+
+### "gradle properties" output
+
+	$ gradle properties
+ 
+	Download https://engci-maven-master.cisco.com/artifactory/jasper-libs-snapshot-local/com/jasperwireless/core-prime/maven-metadata.xml
+ 
+	> Configure project :
+	Full Documentation
+	https://confluence-eng-sjc2.cisco.com/conf/display/ENGG/Build+3.0+Setup+by+Build.gradle
+ 
+	> Task :properties
+ 
+	------------------------------------------------------------
+	Root project
+	------------------------------------------------------------
+ 
+	APP_SPECIAL_MODULES_LIST: [att-csi-emulator, global-sim-callback, jasper-soap-emulator, tef-callback, tef-csp-emulator, vivo-msisdn-emulator]
+	SERVICE_MODULES_LIST: [service-invocation-common]
+	allprojects: [root project 'iot_controlcenter.git', project ':aaa-server-app', project ':account', project ':account-adapter-app', project ':att-account-service-emulator', project ':att-csi-adapter-app', project ':att-csi-emulator', project ':auth', project ':batch-app', project ':bell-adapter-app', project ':billing', project ':ccip-adapter-app', project ':cgw-app', project ':cip-web-service-app', project ':cip-xfer', project ':cip-xfer-app', project ':common-web-ui', project ':control-center', project ':core', project ':core-prime', project ':csp-provisioning-adapter', project ':csp-provisioning-adapter-app', project ':cug', project ':cug-app', project ':data-plane', project ':datastore', project ':diagnostics', project ':e-m-a-adapter-app', project ':e-m-a-v2-adapter-app', project ':e-sim', project ':e-sim-app', project ':e-sim-common-web-ui', project ':ee-adapter-app', project ':external-provision', project ':external-provision-app', project ':flexible-billing', project ':fs-migration-app', project ':global-sim-callback', project ':global-transfer-service', project ':global-transfer-service-app', project ':hlr-adapter', project ':hp-adapter-app', project ':huawei-hss9860-adapter-app', project ':i-p-a-m-adapter-app', project ':i-p-a-m-app', project ':jasper-soap-emulator', project ':jw-vault', project ':k-t-adapter-app', project ':kafka', project ':kpn-esp-adapter-app', project ':logger-adapter-app', project ':memcache-client', project ':merchandising', project ':messaging', project ':messaging-app', project ':metrics-feed', project ':micro-service-client', project ':monitoring', project ':network-element', project ':notification', project ':notification-app', project ':order', project ':pcrf-adapter-app', project ':pcrf-notification-app', project ':post-lux-adapter-app', project ':provision', project ':provision-app', project ':rabbit', project ':realytics-app', project ':registry-server-app', project ':renderer', project ':reporting', project ':rest', project ':rest-app', project ':rest-web-service-app', project ':saml-sso', project ':scala-lib', project ':search-client', project ':search-client-common', project ':search-service', project ':search-service-common', project ':security-service', project ':service-invocation-common', project ':service-registry', project ':shop', project ':sim-change-service-app', project ':sms', project ':smsc-adapter-app', project ':sso', project ':sso-proxy-app', project ':swc-app', project ':tef-csp-emulator', project ':tekelec-adapter-app', project ':telus-adapter-app', project ':throttling', project ':usage', project ':vault-index-search-app', project ':virtual-device-app', project ':vivo-msisdn-emulator', project ':web-service', project ':web-service-app', project ':web-service-helper', project ':workflow']
+	ant: org.gradle.api.internal.project.DefaultAntBuilder@6f788a12
+	antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@a6cdc9b
+	archivesBaseName: iot_controlcenter.git
+	artifactory_password: APAPXYWBdroVVpPjz6A7H1MnZky
+	artifactory_upload_proxy: http://cc-bld-018-lnx.cisco.com:8080/artifactory
+	artifactory_url: https://engci-maven-master.cisco.com/artifactory
+	artifactory_username: jasper.gen
+	artifacts: org.gradle.api.internal.artifacts.dsl.DefaultArtifactHandler_Decorated@35cb0bd2
+	asDynamicObject: DynamicObject for root project 'iot_controlcenter.git'
+	baseClassLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@5762b357
+	build: task ':build'
+	buildDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build
+	buildFile: /Volumes/Numerous/work/src/iot_controlcenter.git/build.gradle
+	buildPath: :
+	buildScriptSource: org.gradle.groovy.scripts.TextResourceScriptSource@7ce18bb3
+	buildscript: org.gradle.api.internal.initialization.DefaultScriptHandler@108518b0
+	cargo: com.bmuschko.gradle.cargo.convention.CargoPluginExtension_Decorated@7dfd14e9
+	cargoDeployRemote: task ':cargoDeployRemote'
+	cargoRedeployLocal: task ':cargoRedeployLocal'
+	cargoRedeployRemote: task ':cargoRedeployRemote'
+	cargoRunLocal: task ':cargoRunLocal'
+	cargoStartLocal: task ':cargoStartLocal'
+	cargoStopLocal: task ':cargoStopLocal'
+	cargoUndeployRemote: task ':cargoUndeployRemote'
+	childModules: ["AAAServerApp","AccountAdapterApp","AttAccountServiceEmulator","AttCsiAdapterApp","BatchApp","BellAdapterApp","CCIPAdapterApp","CIPWebServiceApp","CIPXferApp","CSPProvisioningAdapterApp","CgwApp","CugApp","EEAdapterApp","EMAAdapterApp","EMAV2AdapterApp","ESimApp","ESimCommonWebUI","ExternalProvisionApp","ExternalProvisionDomain","FsMigrationApp","GlobalTransferServiceApp","HPAdapterApp","HuaweiHSS9860AdapterApp","IPAMAdapterApp","IPAMApp","KTAdapterApp","KpnEspAdapterApp","LoggerAdapterApp","MessagingApp","NotificationApp","PcrfAdapterApp","PcrfNotificationApp","PostLuxAdapterApp","ProvisionApp","RealyticsApp","RestApp","RestWebServiceApp","RegistryServerApp","SmscAdapterApp","SwcApp","SSOProxyApp","SimChangeServiceApp","TekelecAdapterApp","TelusAdapterApp","VaultIndexSearchApp","VirtualDeviceApp","WebServiceApp","AccountDomain","AttCsiEmulator","AuthDomain","BillingDomain","CIPXferDomain","CSPProvisioningAdapterDomain","CommonWebUI","ControlCenterDomain","Core","CorePrime","CugDomain","DataPlaneDomain","DatastoreDomain","DiagnosticsDomain","ESimDomain","FlexibleBillingDomain","GlobalSimCallback","GlobalTransferServiceDomain","HlrAdapterDomain","JWVaultDomain","JasperSoapEmulator","KafkaDomain","MemcacheClientDomain","MerchandisingDomain","MessagingDomain","MetricsFeedDomain","MonitoringDomain","NetworkElementDomain","NotificationDomain","OrderDomain","ProvisionDomain","RendererDomain","ReportingDomain","RestDomain","SSODomain","SamlSSODomain","ScalaLibDomain","SearchClient","SearchClientCommon","SearchService","SearchServiceCommon","SecurityServiceDomain","ServiceInvocationCommon","ServiceRegistryDomain","ShopDomain","SmsDomain","TefCspEmulator","ThrottlingDomain","UsageDomain","VivoMsisdnEmulator","WebServiceDomain","WebServiceHelperDomain","MicroServiceClient","WorkflowDomain","RabbitDomain"]
+	childProjects: {aaa-server-app=project ':aaa-server-app', account=project ':account', account-adapter-app=project ':account-adapter-app', att-account-service-emulator=project ':att-account-service-emulator', att-csi-adapter-app=project ':att-csi-adapter-app', att-csi-emulator=project ':att-csi-emulator', auth=project ':auth', batch-app=project ':batch-app', bell-adapter-app=project ':bell-adapter-app', billing=project ':billing', ccip-adapter-app=project ':ccip-adapter-app', cgw-app=project ':cgw-app', cip-web-service-app=project ':cip-web-service-app', cip-xfer=project ':cip-xfer', cip-xfer-app=project ':cip-xfer-app', common-web-ui=project ':common-web-ui', control-center=project ':control-center', core=project ':core', core-prime=project ':core-prime', csp-provisioning-adapter=project ':csp-provisioning-adapter', csp-provisioning-adapter-app=project ':csp-provisioning-adapter-app', cug=project ':cug', cug-app=project ':cug-app', data-plane=project ':data-plane', datastore=project ':datastore', diagnostics=project ':diagnostics', e-m-a-adapter-app=project ':e-m-a-adapter-app', e-m-a-v2-adapter-app=project ':e-m-a-v2-adapter-app', e-sim=project ':e-sim', e-sim-app=project ':e-sim-app', e-sim-common-web-ui=project ':e-sim-common-web-ui', ee-adapter-app=project ':ee-adapter-app', external-provision=project ':external-provision', external-provision-app=project ':external-provision-app', flexible-billing=project ':flexible-billing', fs-migration-app=project ':fs-migration-app', global-sim-callback=project ':global-sim-callback', global-transfer-service=project ':global-transfer-service', global-transfer-service-app=project ':global-transfer-service-app', hlr-adapter=project ':hlr-adapter', hp-adapter-app=project ':hp-adapter-app', huawei-hss9860-adapter-app=project ':huawei-hss9860-adapter-app', i-p-a-m-adapter-app=project ':i-p-a-m-adapter-app', i-p-a-m-app=project ':i-p-a-m-app', jasper-soap-emulator=project ':jasper-soap-emulator', jw-vault=project ':jw-vault', k-t-adapter-app=project ':k-t-adapter-app', kafka=project ':kafka', kpn-esp-adapter-app=project ':kpn-esp-adapter-app', logger-adapter-app=project ':logger-adapter-app', memcache-client=project ':memcache-client', merchandising=project ':merchandising', messaging=project ':messaging', messaging-app=project ':messaging-app', metrics-feed=project ':metrics-feed', micro-service-client=project ':micro-service-client', monitoring=project ':monitoring', network-element=project ':network-element', notification=project ':notification', notification-app=project ':notification-app', order=project ':order', pcrf-adapter-app=project ':pcrf-adapter-app', pcrf-notification-app=project ':pcrf-notification-app', post-lux-adapter-app=project ':post-lux-adapter-app', provision=project ':provision', provision-app=project ':provision-app', rabbit=project ':rabbit', realytics-app=project ':realytics-app', registry-server-app=project ':registry-server-app', renderer=project ':renderer', reporting=project ':reporting', rest=project ':rest', rest-app=project ':rest-app', rest-web-service-app=project ':rest-web-service-app', saml-sso=project ':saml-sso', scala-lib=project ':scala-lib', search-client=project ':search-client', search-client-common=project ':search-client-common', search-service=project ':search-service', search-service-common=project ':search-service-common', security-service=project ':security-service', service-invocation-common=project ':service-invocation-common', service-registry=project ':service-registry', shop=project ':shop', sim-change-service-app=project ':sim-change-service-app', sms=project ':sms', smsc-adapter-app=project ':smsc-adapter-app', sso=project ':sso', sso-proxy-app=project ':sso-proxy-app', swc-app=project ':swc-app', tef-csp-emulator=project ':tef-csp-emulator', tekelec-adapter-app=project ':tekelec-adapter-app', telus-adapter-app=project ':telus-adapter-app', throttling=project ':throttling', usage=project ':usage', vault-index-search-app=project ':vault-index-search-app', virtual-device-app=project ':virtual-device-app', vivo-msisdn-emulator=project ':vivo-msisdn-emulator', web-service=project ':web-service', web-service-app=project ':web-service-app', web-service-helper=project ':web-service-helper', workflow=project ':workflow'}
+	class: class org.gradle.api.internal.project.DefaultProject_Decorated
+	classLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@3f47f80a
+	cleanIdea: task ':cleanIdea'
+	cleanIdeaModule: task ':cleanIdeaModule'
+	cleanIdeaProject: task ':cleanIdeaProject'
+	cleanIdeaWorkspace: task ':cleanIdeaWorkspace'
+	cleanJacocoExecs: task ':cleanJacocoExecs'
+	components: SoftwareComponentInternal set
+	configurationActions: org.gradle.configuration.project.DefaultProjectConfigurationActionContainer@4f0b4042
+	configurationTargetIdentifier: org.gradle.configuration.ConfigurationTargetIdentifier$1@7773918b
+	configurations: configuration container
+	convention: org.gradle.api.internal.plugins.DefaultConvention@623c99d0
+	copyProperties: task ':copyProperties'
+	createIdea: common_idea_1ejgpypk8vasywjh8vfx5o27e$_run_closure2@623bba35
+	createIdeaApp: common_idea_1ejgpypk8vasywjh8vfx5o27e$_run_closure3@7727ff60
+	createIdeaLib: common_idea_1ejgpypk8vasywjh8vfx5o27e$_run_closure4@1c33d7c6
+	createProperties: task ':createProperties'
+	defaultArtifacts: org.gradle.api.internal.plugins.DefaultArtifactPublicationSet_Decorated@1a473f89
+	defaultTasks: []
+	deferredProjectConfiguration: org.gradle.api.internal.project.DeferredProjectConfiguration@2592d4e6
+	deleteExploded: task ':deleteExploded'
+	dependencies: org.gradle.api.internal.artifacts.dsl.dependencies.DefaultDependencyHandler_Decorated@6d86e3cb
+	dependencyLocking: org.gradle.internal.locking.DefaultDependencyLockingHandler_Decorated@6f89845a
+	deployTest: task ':deployTest'
+	deployTest0: task ':deployTest0'
+	deployTest0_checkSuccess: task ':deployTest0_checkSuccess'
+	deployTest0_setup: task ':deployTest0_setup'
+	deployTest0_startTomcat: task ':deployTest0_startTomcat'
+	deployTest0_stopTomcat: task ':deployTest0_stopTomcat'
+	deployTest1: task ':deployTest1'
+	deployTest1_checkSuccess: task ':deployTest1_checkSuccess'
+	deployTest1_setup: task ':deployTest1_setup'
+	deployTest1_startTomcat: task ':deployTest1_startTomcat'
+	deployTest1_stopTomcat: task ':deployTest1_stopTomcat'
+	deployTest2: task ':deployTest2'
+	deployTest2_checkSuccess: task ':deployTest2_checkSuccess'
+	deployTest2_setup: task ':deployTest2_setup'
+	deployTest2_startTomcat: task ':deployTest2_startTomcat'
+	deployTest2_stopTomcat: task ':deployTest2_stopTomcat'
+	deployTest3: task ':deployTest3'
+	deployTest3_checkSuccess: task ':deployTest3_checkSuccess'
+	deployTest3_setup: task ':deployTest3_setup'
+	deployTest3_startTomcat: task ':deployTest3_startTomcat'
+	deployTest3_stopTomcat: task ':deployTest3_stopTomcat'
+	deployTest4: task ':deployTest4'
+	deployTest4_checkSuccess: task ':deployTest4_checkSuccess'
+	deployTest4_setup: task ':deployTest4_setup'
+	deployTest4_startTomcat: task ':deployTest4_startTomcat'
+	deployTest4_stopTomcat: task ':deployTest4_stopTomcat'
+	deployTest5: task ':deployTest5'
+	deployTest5_checkSuccess: task ':deployTest5_checkSuccess'
+	deployTest5_setup: task ':deployTest5_setup'
+	deployTest5_startTomcat: task ':deployTest5_startTomcat'
+	deployTest5_stopTomcat: task ':deployTest5_stopTomcat'
+	deployTest6: task ':deployTest6'
+	deployTest6_checkSuccess: task ':deployTest6_checkSuccess'
+	deployTest6_setup: task ':deployTest6_setup'
+	deployTest6_startTomcat: task ':deployTest6_startTomcat'
+	deployTest6_stopTomcat: task ':deployTest6_stopTomcat'
+	deployTest7: task ':deployTest7'
+	deployTest7_checkSuccess: task ':deployTest7_checkSuccess'
+	deployTest7_setup: task ':deployTest7_setup'
+	deployTest7_startTomcat: task ':deployTest7_startTomcat'
+	deployTest7_stopTomcat: task ':deployTest7_stopTomcat'
+	depth: 0
+	description: null
+	displayName: root project 'iot_controlcenter.git'
+	distsDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build/distributions
+	distsDirName: distributions
+	docsDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build/docs
+	docsDirName: docs
+	exploded: task ':exploded'
+	ext: org.gradle.api.internal.plugins.DefaultExtraPropertiesExtension@4c915555
+	extensions: org.gradle.api.internal.plugins.DefaultConvention@623c99d0
+	fileOperations: org.gradle.api.internal.file.DefaultFileOperations@7f978dc5
+	fileResolver: org.gradle.api.internal.file.BaseDirFileResolver@2555a147
+	getJarName: org.codehaus.groovy.runtime.MethodClosure@65d5ae3
+	gradle: build 'iot_controlcenter.git'
+	group:
+	help: task ':help'
+	idea: org.gradle.plugins.ide.idea.model.IdeaModel_Decorated@40a08c80
+	ideaModule: task ':ideaModule'
+	ideaProject: task ':ideaProject'
+	ideaWorkspace: task ':ideaWorkspace'
+	identityPath: :
+	includeConfig: true
+	includeJsp: true
+	inheritedScope: org.gradle.api.internal.ExtensibleDynamicObject$InheritedDynamicObject@39ad8f4
+	integrationTest: task ':integrationTest'
+	jacoco: org.gradle.testing.jacoco.plugins.JacocoPluginExtension_Decorated@b4d0e59
+	jacocoTestCoverageVerification: task ':jacocoTestCoverageVerification'
+	jacocoTestReport: task ':jacocoTestReport'
+	jar: task ':jar'
+	layout: org.gradle.api.internal.file.DefaultProjectLayout@67abc791
+	libsDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build/libs
+	libsDirName: libs
+	loadApps: task ':loadApps'
+	localModule: [AAAServerApp, AccountAdapterApp, AttAccountServiceEmulator, AttCsiAdapterApp, BatchApp, BellAdapterApp, CCIPAdapterApp, CIPWebServiceApp, CIPXferApp, CSPProvisioningAdapterApp, CgwApp, CugApp, EEAdapterApp, EMAAdapterApp, EMAV2AdapterApp, ESimApp, ESimCommonWebUI, ExternalProvisionApp, ExternalProvisionDomain, FsMigrationApp, GlobalTransferServiceApp, HPAdapterApp, HuaweiHSS9860AdapterApp, IPAMAdapterApp, IPAMApp, KTAdapterApp, KpnEspAdapterApp, LoggerAdapterApp, MessagingApp, NotificationApp, PcrfAdapterApp, PcrfNotificationApp, PostLuxAdapterApp, ProvisionApp, RealyticsApp, RestApp, RestWebServiceApp, RegistryServerApp, SmscAdapterApp, SwcApp, SSOProxyApp, SimChangeServiceApp, TekelecAdapterApp, TelusAdapterApp, VaultIndexSearchApp, VirtualDeviceApp, WebServiceApp, AccountDomain, AttCsiEmulator, AuthDomain, BillingDomain, CIPXferDomain, CSPProvisioningAdapterDomain, CommonWebUI, ControlCenterDomain, Core, CorePrime, CugDomain, DataPlaneDomain, DatastoreDomain, DiagnosticsDomain, ESimDomain, FlexibleBillingDomain, GlobalSimCallback, GlobalTransferServiceDomain, HlrAdapterDomain, JWVaultDomain, JasperSoapEmulator, KafkaDomain, MemcacheClientDomain, MerchandisingDomain, MessagingDomain, MetricsFeedDomain, MonitoringDomain, NetworkElementDomain, NotificationDomain, OrderDomain, ProvisionDomain, RendererDomain, ReportingDomain, RestDomain, SSODomain, SamlSSODomain, ScalaLibDomain, SearchClient, SearchClientCommon, SearchService, SearchServiceCommon, SecurityServiceDomain, ServiceInvocationCommon, ServiceRegistryDomain, ShopDomain, SmsDomain, TefCspEmulator, ThrottlingDomain, UsageDomain, VivoMsisdnEmulator, WebServiceDomain, WebServiceHelperDomain, MicroServiceClient, WorkflowDomain, RabbitDomain]
+	logger: org.gradle.internal.logging.slf4j.OutputEventListenerBackedLogger@232b8368
+	logging: org.gradle.internal.logging.services.DefaultLoggingManager@7623a281
+	modelRegistry: org.gradle.model.internal.registry.DefaultModelRegistry@157f55da
+	modelSchemaStore: org.gradle.model.internal.manage.schema.extract.DefaultModelSchemaStore@2cd18fab
+	module: org.gradle.api.internal.artifacts.ProjectBackedModule@59d2c901
+	moduleDeps: []
+	name: iot_controlcenter.git
+	nameSuffix: .gen
+	normalization: org.gradle.normalization.internal.DefaultInputNormalizationHandler_Decorated@539e799a
+	objects: org.gradle.api.internal.model.DefaultObjectFactory@38c2eec2
+	openIdea: task ':openIdea'
+	org.gradle.jvmargs: -XX:MaxPermSize=2048m -Xms1024m -Xmx2048m -Dhttps.protocols=TLSv1.2
+	parent: null
+	parentIdentifier: null
+	path: :
+	pluginManager: org.gradle.api.internal.plugins.DefaultPluginManager_Decorated@57fcbd85
+	plugins: [org.gradle.api.plugins.HelpTasksPlugin@f90d6c2, org.gradle.language.base.plugins.LifecycleBasePlugin@1d559ec, org.gradle.api.plugins.BasePlugin@2a937dfb, org.gradle.api.plugins.ReportingBasePlugin@de20a4f, org.gradle.api.plugins.JavaBasePlugin@7c64877e, org.gradle.api.plugins.JavaPlugin@15165022, org.gradle.testing.jacoco.plugins.JacocoPlugin@7e7a7005, org.gradle.plugins.ide.idea.IdeaPlugin@1de7b816, com.bmuschko.gradle.cargo.CargoBasePlugin@68b27a53, com.bmuschko.gradle.cargo.CargoPlugin@3854f9ab]
+	processOperations: org.gradle.api.internal.file.DefaultFileOperations@7f978dc5
+	processResources: task ':processResources'
+	processTestResources: task ':processTestResources'
+	project: root project 'iot_controlcenter.git'
+	projectConfigurator: org.gradle.api.internal.project.BuildOperationCrossProjectConfigurator@77f0dc06
+	projectDir: /Volumes/Numerous/work/src/iot_controlcenter.git
+	projectEvaluationBroadcaster: ProjectEvaluationListener broadcast
+	projectEvaluator: org.gradle.configuration.project.LifecycleProjectEvaluator@570229cb
+	projectPath: :
+	projectRegistry: org.gradle.api.internal.project.DefaultProjectRegistry@78997917
+	properties: {...}
+	providers: org.gradle.api.internal.provider.DefaultProviderFactory@4abbe314
+	reporting: org.gradle.api.reporting.ReportingExtension_Decorated@3b5a06a9
+	reportsDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build/reports
+	repositories: repository container
+	resourceLoader: org.gradle.internal.resource.transfer.DefaultUriTextResourceLoader@7dd03c78
+	resources: org.gradle.api.internal.resources.DefaultResourceHandler@4eb2b314
+	rootDir: /Volumes/Numerous/work/src/iot_controlcenter.git
+	rootProject: root project 'iot_controlcenter.git'
+	script: false
+	scriptHandlerFactory: org.gradle.api.internal.initialization.DefaultScriptHandlerFactory@5b044a95
+	scriptPluginFactory: org.gradle.configuration.ScriptPluginFactorySelector@30807012
+	serviceRegistryFactory: org.gradle.internal.service.scopes.ProjectScopeServices$4@4ccfb986
+	services: ProjectScopeServices
+	sourceCompatibility: 1.8
+	sourceSets: SourceSet container
+	standardOutputCapture: org.gradle.internal.logging.services.DefaultLoggingManager@7623a281
+	state: project state 'EXECUTED'
+	status: integration
+	subprojects: [project ':aaa-server-app', project ':account', project ':account-adapter-app', project ':att-account-service-emulator', project ':att-csi-adapter-app', project ':att-csi-emulator', project ':auth', project ':batch-app', project ':bell-adapter-app', project ':billing', project ':ccip-adapter-app', project ':cgw-app', project ':cip-web-service-app', project ':cip-xfer', project ':cip-xfer-app', project ':common-web-ui', project ':control-center', project ':core', project ':core-prime', project ':csp-provisioning-adapter', project ':csp-provisioning-adapter-app', project ':cug', project ':cug-app', project ':data-plane', project ':datastore', project ':diagnostics', project ':e-m-a-adapter-app', project ':e-m-a-v2-adapter-app', project ':e-sim', project ':e-sim-app', project ':e-sim-common-web-ui', project ':ee-adapter-app', project ':external-provision', project ':external-provision-app', project ':flexible-billing', project ':fs-migration-app', project ':global-sim-callback', project ':global-transfer-service', project ':global-transfer-service-app', project ':hlr-adapter', project ':hp-adapter-app', project ':huawei-hss9860-adapter-app', project ':i-p-a-m-adapter-app', project ':i-p-a-m-app', project ':jasper-soap-emulator', project ':jw-vault', project ':k-t-adapter-app', project ':kafka', project ':kpn-esp-adapter-app', project ':logger-adapter-app', project ':memcache-client', project ':merchandising', project ':messaging', project ':messaging-app', project ':metrics-feed', project ':micro-service-client', project ':monitoring', project ':network-element', project ':notification', project ':notification-app', project ':order', project ':pcrf-adapter-app', project ':pcrf-notification-app', project ':post-lux-adapter-app', project ':provision', project ':provision-app', project ':rabbit', project ':realytics-app', project ':registry-server-app', project ':renderer', project ':reporting', project ':rest', project ':rest-app', project ':rest-web-service-app', project ':saml-sso', project ':scala-lib', project ':search-client', project ':search-client-common', project ':search-service', project ':search-service-common', project ':security-service', project ':service-invocation-common', project ':service-registry', project ':shop', project ':sim-change-service-app', project ':sms', project ':smsc-adapter-app', project ':sso', project ':sso-proxy-app', project ':swc-app', project ':tef-csp-emulator', project ':tekelec-adapter-app', project ':telus-adapter-app', project ':throttling', project ':usage', project ':vault-index-search-app', project ':virtual-device-app', project ':vivo-msisdn-emulator', project ':web-service', project ':web-service-app', project ':web-service-helper', project ':workflow']
+	targetCompatibility: 1.8
+	tasks: task set
+	test: task ':test'
+	testClasses: task ':testClasses'
+	testJar: task ':testJar'
+	testReportDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build/reports/tests
+	testReportDirName: tests
+	testResultsDir: /Volumes/Numerous/work/src/iot_controlcenter.git/build/test-results
+	testResultsDirName: test-results
+	unprotect: org.codehaus.groovy.runtime.MethodClosure@17be8918
+	version: unspecified
+ 
+	Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+	See https://docs.gradle.org/4.8.1/userguide/command_line_interface.html#sec:command_line_warnings
+ 
+	BUILD SUCCESSFUL in 25s
+	1 actionable task: 1 executed
+
+
+### "gradle model" - output
+gives helpful info about what is available to write in a script
+
+	$ gradle model
+ 
+	Starting a Gradle Daemon (subsequent builds will be faster)
+	Download https://engci-maven-master.cisco.com/artifactory/jasper-libs-snapshot-group/com/jasperwireless/core-prime/maven-metadata.xml
+ 
+	> Configure project :
+	Full Documentation
+	https://confluence-eng-sjc2.cisco.com/conf/display/ENGG/Build+3.0+Setup+by+Build.gradle
+ 
+	> Task :model
+ 
+	------------------------------------------------------------
+	Root project
+	------------------------------------------------------------
+ 
+	+ binaries
+		  | Type:           org.gradle.platform.base.BinaryContainer
+		  | Creator:        BinaryBasePlugin.Rules#binaries(BinaryContainer)
+		  | Rules:
+			 ⤷ JavaBasePluginRules.Rules#attachBridgedBinaries(BinaryContainer, JavaBasePluginRules.BridgedBinaries)
+		+ integrationTest
+			  | Type:       org.gradle.api.internal.jvm.DefaultClassDirectoryBinarySpec_Decorated
+			  | Value:      Classes 'integrationTest'
+			  | Creator:    JavaBasePluginRules.Rules#attachBridgedBinaries(BinaryContainer, JavaBasePluginRules.BridgedBinaries) > put()
+			  | Rules:
+				 ⤷ BinaryBasePlugin.Rules#defineBuildLifecycleTask(BinarySpecInternal, ITaskFactory)
+				 ⤷ BinaryBasePlugin.Rules#addSourceSetsOwnedByBinariesToTheirInputs(BinarySpecInternal)
+		+ main
+			  | Type:       org.gradle.api.internal.jvm.DefaultClassDirectoryBinarySpec_Decorated
+			  | Value:      Classes 'main'
+			  | Creator:    JavaBasePluginRules.Rules#attachBridgedBinaries(BinaryContainer, JavaBasePluginRules.BridgedBinaries) > put()
+			  | Rules:
+				 ⤷ BinaryBasePlugin.Rules#defineBuildLifecycleTask(BinarySpecInternal, ITaskFactory)
+				 ⤷ BinaryBasePlugin.Rules#addSourceSetsOwnedByBinariesToTheirInputs(BinarySpecInternal)
+		+ test
+			  | Type:       org.gradle.api.internal.jvm.DefaultClassDirectoryBinarySpec_Decorated
+			  | Value:      Classes 'test'
+			  | Creator:    JavaBasePluginRules.Rules#attachBridgedBinaries(BinaryContainer, JavaBasePluginRules.BridgedBinaries) > put()
+			  | Rules:
+				 ⤷ BinaryBasePlugin.Rules#defineBuildLifecycleTask(BinarySpecInternal, ITaskFactory)
+				 ⤷ BinaryBasePlugin.Rules#addSourceSetsOwnedByBinariesToTheirInputs(BinarySpecInternal)
+	+ components
+		  | Type:           org.gradle.platform.base.ComponentSpecContainer
+		  | Creator:        ComponentBasePlugin.PluginRules#components(ComponentSpecContainer)
+	+ sources
+		  | Type:           org.gradle.language.base.ProjectSourceSet
+		  | Value:          [Java source 'integrationTest:java', JVM resources 'integrationTest:resources', Java source 'main:java', JVM resources 'main:resources', Java source 'test:java', JVM resources 'test:resources']
+		  | Creator:        LanguageBasePlugin.Rules#sources(Instantiator)
+		  | Rules:
+			 ⤷ JavaBasePluginRules.Rules#attachBridgedSourceSets(ProjectSourceSet, JavaBasePluginRules.BridgedBinaries)
+	+ tasks
+		  | Type:           org.gradle.model.ModelMap<org.gradle.api.Task>
+		  | Creator:        Project.<init>.tasks()
+		  | Rules:
+			 ⤷ BinaryBasePlugin.Rules#copyBinaryTasksToTaskContainer(TaskContainer, BinaryContainer)
+		+ assemble
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':assemble'
+			  | Creator:    Project.<init>.tasks.assemble()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ build
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':build'
+			  | Creator:    Project.<init>.tasks.build()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ buildDependents
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':buildDependents'
+			  | Creator:    Project.<init>.tasks.buildDependents()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ buildEnvironment
+			  | Type:       org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask
+			  | Value:      task ':buildEnvironment'
+			  | Creator:    Project.<init>.tasks.buildEnvironment()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ buildNeeded
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':buildNeeded'
+			  | Creator:    Project.<init>.tasks.buildNeeded()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoDeployRemote
+			  | Type:       com.bmuschko.gradle.cargo.tasks.remote.CargoDeployRemote
+			  | Value:      task ':cargoDeployRemote'
+			  | Creator:    Project.<init>.tasks.cargoDeployRemote()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoRedeployLocal
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoRedeployLocal
+			  | Value:      task ':cargoRedeployLocal'
+			  | Creator:    Project.<init>.tasks.cargoRedeployLocal()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoRedeployRemote
+			  | Type:       com.bmuschko.gradle.cargo.tasks.remote.CargoRedeployRemote
+			  | Value:      task ':cargoRedeployRemote'
+			  | Creator:    Project.<init>.tasks.cargoRedeployRemote()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoRunLocal
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoRunLocal
+			  | Value:      task ':cargoRunLocal'
+			  | Creator:    Project.<init>.tasks.cargoRunLocal()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoStartLocal
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':cargoStartLocal'
+			  | Creator:    Project.<init>.tasks.cargoStartLocal()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoStopLocal
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':cargoStopLocal'
+			  | Creator:    Project.<init>.tasks.cargoStopLocal()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cargoUndeployRemote
+			  | Type:       com.bmuschko.gradle.cargo.tasks.remote.CargoUndeployRemote
+			  | Value:      task ':cargoUndeployRemote'
+			  | Creator:    Project.<init>.tasks.cargoUndeployRemote()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ check
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':check'
+			  | Creator:    Project.<init>.tasks.check()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ classes
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':classes'
+			  | Creator:    Project.<init>.tasks.classes()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ clean
+			  | Type:       org.gradle.api.tasks.Delete
+			  | Value:      task ':clean'
+			  | Creator:    Project.<init>.tasks.clean()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cleanIdea
+			  | Type:       org.gradle.api.tasks.Delete
+			  | Value:      task ':cleanIdea'
+			  | Creator:    Project.<init>.tasks.cleanIdea()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cleanIdeaModule
+			  | Type:       org.gradle.api.tasks.Delete
+			  | Value:      task ':cleanIdeaModule'
+			  | Creator:    Project.<init>.tasks.cleanIdeaModule()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cleanIdeaProject
+			  | Type:       org.gradle.api.tasks.Delete
+			  | Value:      task ':cleanIdeaProject'
+			  | Creator:    Project.<init>.tasks.cleanIdeaProject()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cleanIdeaWorkspace
+			  | Type:       org.gradle.api.tasks.Delete
+			  | Value:      task ':cleanIdeaWorkspace'
+			  | Creator:    Project.<init>.tasks.cleanIdeaWorkspace()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ cleanJacocoExecs
+			  | Type:       org.gradle.api.tasks.Delete
+			  | Value:      task ':cleanJacocoExecs'
+			  | Creator:    Project.<init>.tasks.cleanJacocoExecs()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ compileIntegrationTestJava
+			  | Type:       org.gradle.api.tasks.compile.JavaCompile
+			  | Value:      task ':compileIntegrationTestJava'
+			  | Creator:    Project.<init>.tasks.compileIntegrationTestJava()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ compileJava
+			  | Type:       org.gradle.api.tasks.compile.JavaCompile
+			  | Value:      task ':compileJava'
+			  | Creator:    Project.<init>.tasks.compileJava()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ compileTestJava
+			  | Type:       org.gradle.api.tasks.compile.JavaCompile
+			  | Value:      task ':compileTestJava'
+			  | Creator:    Project.<init>.tasks.compileTestJava()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ components
+			  | Type:       org.gradle.api.reporting.components.ComponentReport
+			  | Value:      task ':components'
+			  | Creator:    Project.<init>.tasks.components()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ copyProperties
+			  | Type:       org.gradle.api.tasks.Copy
+			  | Value:      task ':copyProperties'
+			  | Creator:    Project.<init>.tasks.copyProperties()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ createProperties
+			  | Type:       org.gradle.api.tasks.Copy
+			  | Value:      task ':createProperties'
+			  | Creator:    Project.<init>.tasks.createProperties()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deleteExploded
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deleteExploded'
+			  | Creator:    Project.<init>.tasks.deleteExploded()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ dependencies
+			  | Type:       org.gradle.api.tasks.diagnostics.DependencyReportTask
+			  | Value:      task ':dependencies'
+			  | Creator:    Project.<init>.tasks.dependencies()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ dependencyInsight
+			  | Type:       org.gradle.api.tasks.diagnostics.DependencyInsightReportTask
+			  | Value:      task ':dependencyInsight'
+			  | Creator:    Project.<init>.tasks.dependencyInsight()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ dependentComponents
+			  | Type:       org.gradle.api.reporting.dependents.DependentComponentsReport
+			  | Value:      task ':dependentComponents'
+			  | Creator:    Project.<init>.tasks.dependentComponents()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest'
+			  | Creator:    Project.<init>.tasks.deployTest()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest0
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest0'
+			  | Creator:    Project.<init>.tasks.deployTest0()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest0_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest0_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest0_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest0_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest0_setup'
+			  | Creator:    Project.<init>.tasks.deployTest0_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest0_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest0_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest0_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest0_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest0_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest0_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest1
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest1'
+			  | Creator:    Project.<init>.tasks.deployTest1()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest1_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest1_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest1_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest1_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest1_setup'
+			  | Creator:    Project.<init>.tasks.deployTest1_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest1_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest1_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest1_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest1_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest1_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest1_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest2
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest2'
+			  | Creator:    Project.<init>.tasks.deployTest2()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest2_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest2_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest2_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest2_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest2_setup'
+			  | Creator:    Project.<init>.tasks.deployTest2_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest2_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest2_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest2_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest2_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest2_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest2_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest3
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest3'
+			  | Creator:    Project.<init>.tasks.deployTest3()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest3_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest3_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest3_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest3_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest3_setup'
+			  | Creator:    Project.<init>.tasks.deployTest3_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest3_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest3_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest3_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest3_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest3_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest3_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest4
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest4'
+			  | Creator:    Project.<init>.tasks.deployTest4()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest4_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest4_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest4_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest4_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest4_setup'
+			  | Creator:    Project.<init>.tasks.deployTest4_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest4_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest4_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest4_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest4_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest4_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest4_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest5
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest5'
+			  | Creator:    Project.<init>.tasks.deployTest5()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest5_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest5_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest5_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest5_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest5_setup'
+			  | Creator:    Project.<init>.tasks.deployTest5_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest5_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest5_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest5_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest5_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest5_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest5_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest6
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest6'
+			  | Creator:    Project.<init>.tasks.deployTest6()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest6_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest6_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest6_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest6_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest6_setup'
+			  | Creator:    Project.<init>.tasks.deployTest6_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest6_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest6_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest6_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest6_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest6_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest6_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest7
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest7'
+			  | Creator:    Project.<init>.tasks.deployTest7()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest7_checkSuccess
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest7_checkSuccess'
+			  | Creator:    Project.<init>.tasks.deployTest7_checkSuccess()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest7_setup
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':deployTest7_setup'
+			  | Creator:    Project.<init>.tasks.deployTest7_setup()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest7_startTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStartLocal
+			  | Value:      task ':deployTest7_startTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest7_startTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ deployTest7_stopTomcat
+			  | Type:       com.bmuschko.gradle.cargo.tasks.local.CargoStopLocal
+			  | Value:      task ':deployTest7_stopTomcat'
+			  | Creator:    Project.<init>.tasks.deployTest7_stopTomcat()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ exploded
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':exploded'
+			  | Creator:    Project.<init>.tasks.exploded()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ help
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':help'
+			  | Creator:    Project.<init>.tasks.help()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ idea
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':idea'
+			  | Creator:    Project.<init>.tasks.idea()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ ideaModule
+			  | Type:       org.gradle.plugins.ide.idea.GenerateIdeaModule
+			  | Value:      task ':ideaModule'
+			  | Creator:    Project.<init>.tasks.ideaModule()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ ideaProject
+			  | Type:       org.gradle.plugins.ide.idea.GenerateIdeaProject
+			  | Value:      task ':ideaProject'
+			  | Creator:    Project.<init>.tasks.ideaProject()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ ideaWorkspace
+			  | Type:       org.gradle.plugins.ide.idea.GenerateIdeaWorkspace
+			  | Value:      task ':ideaWorkspace'
+			  | Creator:    Project.<init>.tasks.ideaWorkspace()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ init
+			  | Type:       org.gradle.buildinit.tasks.InitBuild
+			  | Value:      task ':init'
+			  | Creator:    Project.<init>.tasks.init()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ integrationTest
+			  | Type:       org.gradle.api.tasks.testing.Test
+			  | Value:      task ':integrationTest'
+			  | Creator:    Project.<init>.tasks.integrationTest()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ integrationTestClasses
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':integrationTestClasses'
+			  | Creator:    Project.<init>.tasks.integrationTestClasses()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ jacocoTestCoverageVerification
+			  | Type:       org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
+			  | Value:      task ':jacocoTestCoverageVerification'
+			  | Creator:    Project.<init>.tasks.jacocoTestCoverageVerification()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ jacocoTestReport
+			  | Type:       org.gradle.testing.jacoco.tasks.JacocoReport
+			  | Value:      task ':jacocoTestReport'
+			  | Creator:    Project.<init>.tasks.jacocoTestReport()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ jar
+			  | Type:       org.gradle.api.tasks.bundling.Jar
+			  | Value:      task ':jar'
+			  | Creator:    Project.<init>.tasks.jar()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ javadoc
+			  | Type:       org.gradle.api.tasks.javadoc.Javadoc
+			  | Value:      task ':javadoc'
+			  | Creator:    Project.<init>.tasks.javadoc()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ loadApps
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':loadApps'
+			  | Creator:    Project.<init>.tasks.loadApps()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ model
+			  | Type:       org.gradle.api.reporting.model.ModelReport
+			  | Value:      task ':model'
+			  | Creator:    Project.<init>.tasks.model()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ openIdea
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':openIdea'
+			  | Creator:    Project.<init>.tasks.openIdea()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ processIntegrationTestResources
+			  | Type:       org.gradle.language.jvm.tasks.ProcessResources
+			  | Value:      task ':processIntegrationTestResources'
+			  | Creator:    Project.<init>.tasks.processIntegrationTestResources()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ processResources
+			  | Type:       org.gradle.language.jvm.tasks.ProcessResources
+			  | Value:      task ':processResources'
+			  | Creator:    Project.<init>.tasks.processResources()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ processTestResources
+			  | Type:       org.gradle.language.jvm.tasks.ProcessResources
+			  | Value:      task ':processTestResources'
+			  | Creator:    Project.<init>.tasks.processTestResources()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ projects
+			  | Type:       org.gradle.api.tasks.diagnostics.ProjectReportTask
+			  | Value:      task ':projects'
+			  | Creator:    Project.<init>.tasks.projects()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ properties
+			  | Type:       org.gradle.api.tasks.diagnostics.PropertyReportTask
+			  | Value:      task ':properties'
+			  | Creator:    Project.<init>.tasks.properties()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ tasks
+			  | Type:       org.gradle.api.tasks.diagnostics.TaskReportTask
+			  | Value:      task ':tasks'
+			  | Creator:    Project.<init>.tasks.tasks()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ test
+			  | Type:       org.gradle.api.tasks.testing.Test
+			  | Value:      task ':test'
+			  | Creator:    Project.<init>.tasks.test()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ testClasses
+			  | Type:       org.gradle.api.DefaultTask
+			  | Value:      task ':testClasses'
+			  | Creator:    Project.<init>.tasks.testClasses()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ testJar
+			  | Type:       org.gradle.api.tasks.bundling.Jar
+			  | Value:      task ':testJar'
+			  | Creator:    Project.<init>.tasks.testJar()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+		+ wrapper
+			  | Type:       org.gradle.api.tasks.wrapper.Wrapper
+			  | Value:      task ':wrapper'
+			  | Creator:    Project.<init>.tasks.wrapper()
+			  | Rules:
+				 ⤷ copyToTaskContainer
+ 
+	Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+	See https://docs.gradle.org/4.8.1/userguide/command_line_interface.html#sec:command_line_warnings
+ 
+	BUILD SUCCESSFUL in 1m 48s
+	1 actionable task: 1 executed

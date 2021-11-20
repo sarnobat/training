@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo ~/scripts/start-machines.sh

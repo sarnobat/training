@@ -1,5 +1,0 @@
-# Usually the codebase will be a jar file
-grant codeBase "file:./-" { 
-	
-	permission java.io.FilePermission "output.txt", "write,read";
-};
