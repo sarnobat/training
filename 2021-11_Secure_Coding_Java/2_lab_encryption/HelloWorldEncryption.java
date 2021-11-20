@@ -9,16 +9,22 @@ public class HelloWorldEncryption {
   public static void main(String[] args) throws Exception {
 
 		String msgText = "This is a message created by Komal";
-		KeyGenerator keyGen = KeyGenerator.getInstance("AES"); 
-		keyGen.init(new SecureRandom());
-		Key key = keyGen.generateKey();
-		byte[] encrypted = encrypt(msgText, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
+		
+		symmetric: {
+			KeyGenerator keyGen = KeyGenerator.getInstance("AES"); 
+			keyGen.init(new SecureRandom());
+			Key key = keyGen.generateKey();
+			byte[] encrypted = encrypt(msgText, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
 
-		System.out.println("encrypted text: " + new String(encrypted));
+			System.out.println("encrypted text: " + new String(encrypted));
 		
-		byte[] decrypted = decrypt(encrypted, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
+			byte[] decrypted = decrypt(encrypted, key, Cipher.getInstance("AES/ECB/PKCS5Padding"));
 		
-		System.out.println("decrypted text: " + new String(decrypted));
+			System.out.println("decrypted text: " + new String(decrypted));
+		}
+		
+		asymmetric: {
+		}
 	}
 
 	private static byte[] encrypt(String msg, Key key, Cipher cipher) throws Exception { 
