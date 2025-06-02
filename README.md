@@ -10,3 +10,4 @@ TODO:
 * 2023 python OOP architecture?
 * 2021 gradle
 * 2023 kubernetes
+* 2025 compilers harvard
