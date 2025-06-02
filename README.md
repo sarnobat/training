@@ -3,8 +3,9 @@
 Do not lose what you learn after 6 months.
 
 TODO:
-* 2014 Linux kernel
+* 2008 PLM
 * 2009 Ajax
+* 2014 Linux kernel
 * 2023 Pytorch
 * 2023 neural networks
 * 2023 python OOP architecture?
